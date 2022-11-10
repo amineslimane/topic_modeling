@@ -1,3 +1,4 @@
+import pickle
 from operator import index
 import streamlit as st
 import plotly.express as px
@@ -11,8 +12,10 @@ import datetime as dt
 from PIL import Image
 import streamlit.components.v1 as components
 
-
 df = pd.read_csv('dataset.csv', sep=",", index_col=None)
+
+df_cleaned = pd.read_csv('dataset_cleaned.csv', sep=",", index_col=None)
+df_cleaned.columns = ["Texte", "Stars", "Length", "Cleaned Text"]
 
 def index_input_callback():
     st.session_state['options'] = df.iloc[index_input]['text']
@@ -23,37 +26,89 @@ def aleatoire_callback():
     st.session_state['options'] = df.iloc[index_input]['text']
 
 
+uploaded_pickled_model = pickle.load(open('model_yasmine', 'rb'))
+model_vectorizer = pickle.load(open('vectorizer_yasmine', 'rb'))
+topics =  ['Staff management', 'Food Quality', 'Pizza', 'Menu Chicken', 'Quality', 'Service time',
+           'Burger', 'Waiting Time', 'Experience', 'Drinks', 'Ordering & Delivery to table', 'Location',
+           'Customer Service',  'Sushi and Rice', 'Place Environnement']
+
+def topics_suggestion(text, nb):
+    transformed_text = model_vectorizer.transform([text])
+    predicted_topics = uploaded_pickled_model.transform(transformed_text)
+    sorted_predicted_topics = np.argsort(predicted_topics, axis=1)
+    final_predicted_topics = []
+    for i in range(len(predicted_topics)):
+        # print(new_reviews[i])
+        for j in range(len(topics) - 1, len(topics) - 1 - nb, -1):
+            topic_index = sorted_predicted_topics[i][j]
+            topic = topics[topic_index]
+            topic_percentage = round(100*predicted_topics[i][topic_index], 1)
+            if topic_percentage == 0:
+                break
+            final_predicted_topics.append([topic, str(topic_percentage)+"%"])
+    return final_predicted_topics
+
+
+# im = Image.open("favicon.ico")
 st.set_page_config(
     page_title="Review Analyzer | Topic Modeling",
     page_icon="🎈",
+    layout="wide",
 )
 
 
 
 with st.sidebar:
+    # from streamlit_option_menu import option_menu
+    # selected = option_menu("", ["Home", 'Settings'], icons=['house', 'gear'],
+    #                        menu_icon="cast", default_index=0)
     st.title("Quel texte analyser ?")
-    analyser_choice = st.radio("Quel texte analyser ?", ["Texte libre", "Avis dataset"])
+    analyser_choice = st.radio("Quel texte analyser ?", ["Avis dataset", "Texte libre"])
 
     if analyser_choice == "Avis dataset":
         index_input = st.number_input("Numéro d'index", key="index_input", step=1, min_value=0, max_value=df.shape[0], on_change=index_input_callback)
         st.button("Aléatoire", on_click=aleatoire_callback)
 
-    # if analyser_choice == "Texte libre":
-    #     st.session_state['options'] = ""
+
+with st.expander("Presentation du projet"):
+    st.write("""
+        L’intention de ce projet est de développer et mettre en œuvre des compétences de prétraitement de texte 
+        et des techniques d’extraction de features spécifiques aux données non structurées de type texte dans le but 
+        de détecter des sujets d’insatisfaction évoqués par des clients dans leurs avis postés sur les sites d’avis client.
+        Le projet couvre tout le cycle de mise en place d’une preuve de concept, du prétraitement des données jusqu’au déploiement.
+    """)
+    etape_1, etape_2, etape_3, etape_4 = st.columns(4)
+    etape_1.info("Etape 1 : Nettoyage et pré-traitement")
+    etape_2.info("Etape 2 : Vectorisation et modélisation")
+    etape_3.info("Etape 3 : Développement application web locale")
+    etape_4.info("Etape 4 : Déploiement application web")
+    st.dataframe(df_cleaned.iloc[:, 0:2], height=250, use_container_width=True)
+
 
 review = st.text_area("Entrez un texte", height=50, max_chars=10000, key='options')
-number = st.slider('Nombre de topics', step=1, min_value=1, max_value=15)
+number = st.slider('Nombre de topics', value=3, step=1, min_value=1, max_value=15)
 
 if review != "":
     detect_topic_btn = st.button("Détecter le sujet d'insatisfaction")
     if detect_topic_btn:
-        st.title(number)
-        st.info(review)
-        col1, col2, col3 = st.columns(3)
-        col1.metric("Temperature", "70 °F", "1.2 °F")
-        col2.metric("Wind", "9 mph", "-8%")
-        col3.metric("Humidity", "86%", "4%")
+        # col1, col2, col3 = st.columns(3)
+        # col1.metric("Temperature", "70 °F", "1.2 °F")
+        # col2.metric("Wind", "9 mph", "-8%")
+        # col3.metric("Humidity", "86%", "4%")
 
+        suggested_topics = topics_suggestion(review, number)
+        columns_components = st.columns(len(suggested_topics))
+        i = 0
+        for col in columns_components:
+            col.metric(suggested_topics[i][0], suggested_topics[i][1])
+            i += 1
+        st.balloons()
+        if len(suggested_topics) != number:
+
+            st.warning(
+                "Le nombre de topic que vous avez demandé est supérieur au nombre de topic "
+                "qui peuvent être en relation avec ce review (Probabilité de similarité égale à 0%)"
+            )
 
 
 
