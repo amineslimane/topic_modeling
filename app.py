@@ -1,58 +1,40 @@
-import pickle
-from operator import index
 import streamlit as st
-import plotly.express as px
-from pycaret.regression import setup, compare_models, pull, save_model, load_model
-import pandas_profiling
 import pandas as pd
 import numpy as np
+from utils import *
+import threading
 from streamlit_pandas_profiling import st_profile_report
-import os 
+import os
 import datetime as dt
 from PIL import Image
 import streamlit.components.v1 as components
+import plotly.express as px
+from pycaret.regression import setup, compare_models, pull, save_model, load_model
+import pandas_profiling
+from operator import index
 
 df = pd.read_csv('dataset.csv', sep=",", index_col=None)
 
 df_cleaned = pd.read_csv('dataset_cleaned.csv', sep=",", index_col=None)
-df_cleaned.columns = ["Texte", "Stars", "Length", "Cleaned Text"]
+df_cleaned.columns = ["📃 Texte", "⭐ Stars", "Length", "Cleaned Text"]
+
 
 def index_input_callback():
-    st.session_state['options'] = df.iloc[index_input]['text']
+    st.session_state['review'] = df.iloc[index_input]['text']
+
 
 def aleatoire_callback():
     random_index = np.random.randint(df.shape[0], size=1)[0]
     st.session_state['index_input'] = random_index
-    st.session_state['options'] = df.iloc[index_input]['text']
+    st.session_state['review'] = df.iloc[index_input]['text']
 
 
-uploaded_pickled_model = pickle.load(open('model_yasmine', 'rb'))
-model_vectorizer = pickle.load(open('vectorizer_yasmine', 'rb'))
-topics =  ['Staff management', 'Food Quality', 'Pizza', 'Menu Chicken', 'Quality', 'Service time',
-           'Burger', 'Waiting Time', 'Experience', 'Drinks', 'Ordering & Delivery to table', 'Location',
-           'Customer Service',  'Sushi and Rice', 'Place Environnement']
-
-def topics_suggestion(text, nb):
-    transformed_text = model_vectorizer.transform([text])
-    predicted_topics = uploaded_pickled_model.transform(transformed_text)
-    sorted_predicted_topics = np.argsort(predicted_topics, axis=1)
-    final_predicted_topics = []
-    for i in range(len(predicted_topics)):
-        # print(new_reviews[i])
-        for j in range(len(topics) - 1, len(topics) - 1 - nb, -1):
-            topic_index = sorted_predicted_topics[i][j]
-            topic = topics[topic_index]
-            topic_percentage = round(100*predicted_topics[i][topic_index], 1)
-            if topic_percentage == 0:
-                break
-            final_predicted_topics.append([topic, str(topic_percentage)+"%"])
-    return final_predicted_topics
 
 
 # im = Image.open("favicon.ico")
 st.set_page_config(
     page_title="Review Analyzer | Topic Modeling",
-    page_icon="🎈",
+    page_icon="⚡️",
     layout="wide",
 )
 
@@ -67,10 +49,10 @@ with st.sidebar:
 
     if analyser_choice == "Avis dataset":
         index_input = st.number_input("Numéro d'index", key="index_input", step=1, min_value=0, max_value=df.shape[0], on_change=index_input_callback)
-        st.button("Aléatoire", on_click=aleatoire_callback)
+        st.button("🤞🏼 Aléatoire", on_click=aleatoire_callback)
 
-
-with st.expander("Presentation du projet"):
+st.header("💬 Review Analyzer | Topic Modeling")
+with st.expander("💡  Présentation du projet"):
     st.write("""
         L’intention de ce projet est de développer et mettre en œuvre des compétences de prétraitement de texte 
         et des techniques d’extraction de features spécifiques aux données non structurées de type texte dans le but 
@@ -78,39 +60,89 @@ with st.expander("Presentation du projet"):
         Le projet couvre tout le cycle de mise en place d’une preuve de concept, du prétraitement des données jusqu’au déploiement.
     """)
     etape_1, etape_2, etape_3, etape_4 = st.columns(4)
-    etape_1.info("Etape 1 : Nettoyage et pré-traitement")
-    etape_2.info("Etape 2 : Vectorisation et modélisation")
-    etape_3.info("Etape 3 : Développement application web locale")
-    etape_4.info("Etape 4 : Déploiement application web")
+    etape_1.info("Etape 1️⃣ : Nettoyage et pré-traitement 🧹")
+    etape_2.info("Etape 2️⃣ : Vectorisation et modélisation 🧠")
+    etape_3.info("Etape 3️⃣ : Développement application web locale ✨")
+    etape_4.info("Etape 4️⃣ : Déploiement application web 🚀")
     st.dataframe(df_cleaned.iloc[:, 0:2], height=250, use_container_width=True)
 
 
-review = st.text_area("Entrez un texte", height=50, max_chars=10000, key='options')
+review = st.text_area("Entrez un texte", height=150, max_chars=5000, key='review')
 number = st.slider('Nombre de topics', value=3, step=1, min_value=1, max_value=15)
 
 if review != "":
-    detect_topic_btn = st.button("Détecter le sujet d'insatisfaction")
-    if detect_topic_btn:
-        # col1, col2, col3 = st.columns(3)
-        # col1.metric("Temperature", "70 °F", "1.2 °F")
-        # col2.metric("Wind", "9 mph", "-8%")
-        # col3.metric("Humidity", "86%", "4%")
+    detect_topic_btn = st.button(label="🤯 Détecter le sujet d'insatisfaction")
 
+    if detect_topic_btn:
+        t = threading.Thread(target=wait_spinner())
+        t.start()
         suggested_topics = topics_suggestion(review, number)
         columns_components = st.columns(len(suggested_topics))
+
+        # aaa = {"Topics": ["Quality", "Food Quality", "Waiting Time"], "Probabilité": [7.7, 5.3, 4.8]}
+        # aa = pd.DataFrame(aaa, columns=["Topics", "Probabilité"], index=["Topics"])
+        # aa.set_index(aa['Topics'])
+        # st.bar_chart(aa)
+        # print(list(suggested_topics['Topics']))
+
+        # print(pd.DataFrame(np.random.randn(10, 2), columns=["a", "b"]))
+        # chart_data = pd.DataFrame(suggested_topics, columns=["Topics","Probabilité"], index=["Topics"])
+        # st.title(chart_data)
+        # st.bar_chart(chart_data)
+
+
         i = 0
         for col in columns_components:
             col.metric(suggested_topics[i][0], suggested_topics[i][1])
             i += 1
         st.balloons()
-        if len(suggested_topics) != number:
 
+
+
+        if len(suggested_topics) != number:
             st.warning(
-                "Le nombre de topic que vous avez demandé est supérieur au nombre de topic "
-                "qui peuvent être en relation avec ce review (Probabilité de similarité égale à 0%)"
+                "⚠️ Le nombre de topic que vous avez demandé est supérieur au nombre de topic "
+                "qui peuvent être en relation avec ce review (Probabilité de similarité égale à 0️%)"
             )
 
 
+# options = st.multiselect(
+#     'What are your favorite colors',
+#     ['Mizyena', 'Tahfouna', 'Red', 'Blue'],
+#     ['Mizyena', 'Tahfouna'])
+#
+# st.write('You selected:', options)
+# import time
+# import requests
+#
+# import streamlit as st
+# from streamlit_lottie import st_lottie
+# from streamlit_lottie import st_lottie_spinner
+#
+#
+# def load_lottieurl(url: str):
+#     r = requests.get(url)
+#     if r.status_code != 200:
+#         return None
+#     return r.json()
+#
+#
+# lottie_url_hello = "https://assets5.lottiefiles.com/packages/lf20_V9t630.json"
+# lottie_url_download = "https://assets4.lottiefiles.com/private_files/lf30_t26law.json"
+# lottie_hello = load_lottieurl(lottie_url_hello)
+# lottie_download = load_lottieurl(lottie_url_download)
+#
+# lottie_url_404 = "https://labs.nearpod.com/bodymovin/demo/markus/isometric/markus2.json"
+# lottie_404 = load_lottieurl(lottie_url_404)
+# st_lottie(lottie_404, width=500, key="404")
+#
+#
+# st_lottie(lottie_hello, width=200, key="hello")
+#
+# if st.button("Download"):
+#     with st_lottie_spinner(lottie_download, key="download"):
+#         time.sleep(5)
+#     st.balloons()
 
 # st.info("This project application helps you build and explore your data.")
 
