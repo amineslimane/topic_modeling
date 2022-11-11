@@ -31,15 +31,3 @@ def wait_spinner():
     with st.spinner('⏳ Wait for it...'):
         time.sleep(5)
     st.success('Success!')
-
-
-def page_css():
-    with open('static/style.css') as f:
-        css_component = f'<style>{f.read()}</style>'
-    st.markdown(css_component, unsafe_allow_html = True)
-
-
-def page_js():
-    with open('static/main.js') as f:
-        javascript_component = f'<script>{f.read()}</script>'
-    components.html(javascript_component, height=0)

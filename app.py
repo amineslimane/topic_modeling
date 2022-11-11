@@ -50,8 +50,12 @@ with st.sidebar:
         index_input = st.number_input("Numéro d'index", key="index_input", step=1, min_value=0, max_value=df.shape[0], on_change=index_input_callback)
         st.button("🤞🏼 Aléatoire", on_click=aleatoire_callback)
 
-    page_css()
-    page_js()
+    with open('static/style.css') as f:
+        css_component = f'<style>{f.read()}</style>'
+    st.markdown(css_component, unsafe_allow_html=True)
+    with open('static/main.js') as f:
+        javascript_component = f'<script>{f.read()}</script>'
+    components.html(javascript_component, height=0)
 
 st.markdown("<h3>💬 Review Analyzer | Topic Modeling</h3>", unsafe_allow_html=True)
 with st.expander("💡 Présentation du projet"):
