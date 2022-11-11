@@ -2,12 +2,13 @@ import numpy as np
 import pickle
 import time
 import streamlit as st
+import streamlit.components.v1 as components
 
-uploaded_pickled_model = pickle.load(open('model_yasmine', 'rb'))
-model_vectorizer = pickle.load(open('vectorizer_yasmine', 'rb'))
-topics = ['Staff management', 'Food Quality', 'Pizza', 'Menu Chicken', 'Quality', 'Service time',
-           'Burger', 'Waiting Time', 'Experience', 'Drinks', 'Ordering & Delivery to table', 'Location',
-           'Customer Service',  'Sushi and Rice', 'Place Environnement']
+uploaded_pickled_model = pickle.load(open('nmf_model/model_yasmine', 'rb'))
+model_vectorizer = pickle.load(open('nmf_model/vectorizer_yasmine', 'rb'))
+topics = ['Staff management', '👨‍🍳 Food Quality', '🍕 Pizza', '🐔 Menu Chicken', '🥣 Quality', '⏱ Service time',
+           '🍔 Burger', '🕘 Waiting Time', '🖐 Experience', '🥤 Drinks', '🍴 Ordering & Delivery to table', '🌍 Location',
+           '🛎️ Customer Service',  '🍣 Sushi and Rice', '🌍 Place Environnement']
 
 
 def topics_suggestion(text, nb):
@@ -30,3 +31,15 @@ def wait_spinner():
     with st.spinner('⏳ Wait for it...'):
         time.sleep(5)
     st.success('Success!')
+
+
+def page_css():
+    with open('static/style.css') as f:
+        css_component = f'<style>{f.read()}</style>'
+    st.markdown(css_component, unsafe_allow_html = True)
+
+
+def page_js():
+    with open('static/main.js') as f:
+        javascript_component = f'<script>{f.read()}</script>'
+    components.html(javascript_component, height=0)

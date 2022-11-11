@@ -3,11 +3,11 @@ import pandas as pd
 import numpy as np
 from utils import *
 import threading
+
 from streamlit_pandas_profiling import st_profile_report
 import os
 import datetime as dt
 from PIL import Image
-import streamlit.components.v1 as components
 import plotly.express as px
 from pycaret.regression import setup, compare_models, pull, save_model, load_model
 import pandas_profiling
@@ -40,6 +40,9 @@ st.set_page_config(
 
 
 
+
+
+
 with st.sidebar:
     # from streamlit_option_menu import option_menu
     # selected = option_menu("", ["Home", 'Settings'], icons=['house', 'gear'],
@@ -51,7 +54,10 @@ with st.sidebar:
         index_input = st.number_input("Numéro d'index", key="index_input", step=1, min_value=0, max_value=df.shape[0], on_change=index_input_callback)
         st.button("🤞🏼 Aléatoire", on_click=aleatoire_callback)
 
-st.header("💬 Review Analyzer | Topic Modeling")
+    page_css()
+    page_js()
+
+st.markdown("<h3>💬 Review Analyzer | Topic Modeling</h3>", unsafe_allow_html=True)
 with st.expander("💡  Présentation du projet"):
     st.write("""
         L’intention de ce projet est de développer et mettre en œuvre des compétences de prétraitement de texte 
@@ -70,6 +76,7 @@ with st.expander("💡  Présentation du projet"):
 review = st.text_area("Entrez un texte", height=150, max_chars=5000, key='review')
 number = st.slider('Nombre de topics', value=3, step=1, min_value=1, max_value=15)
 
+
 if review != "":
     detect_topic_btn = st.button(label="🤯 Détecter le sujet d'insatisfaction")
 
@@ -79,10 +86,30 @@ if review != "":
         suggested_topics = topics_suggestion(review, number)
         columns_components = st.columns(len(suggested_topics))
 
-        # aaa = {"Topics": ["Quality", "Food Quality", "Waiting Time"], "Probabilité": [7.7, 5.3, 4.8]}
+        aaa = {"Quality": 7.7, "Food Quality": 5.3, "Waiting Time": 4.8}
         # aa = pd.DataFrame(aaa, columns=["Topics", "Probabilité"], index=["Topics"])
         # aa.set_index(aa['Topics'])
-        # st.bar_chart(aa)
+        # st.bar_chart(aaa)
+        # import matplotlib.pyplot as plt
+        # import numpy as np
+        #
+        # # Plot
+        # fig, ax1= plt.subplots(1, 1, figsize=(10, 4), dpi=120, sharey=True)
+        #
+        # # Topic Distribution by Dominant Topics
+        # ax1.bar(x='Dominant_Topic', height='count', data=[5, 6,7], width=5, color='firebrick')
+        # ax1.set_xticks(["Topic 1", "Topic 2", "Topic 3"])
+        # # tick_formatter = FuncFormatter(lambda x, pos: 'Topic ' + str(x) + '\n' + df_top3words.loc[df_top3words.topic_id == x, 'words'].values[0])
+        # # ax1.xaxis.set_major_formatter(tick_formatter)
+        # ax1.set_title('Number of Documents by Dominant Topic', fontdict=dict(size=10))
+        # ax1.set_ylabel('Number of Documents')
+        # ax1.set_ylim(0, 1000)
+
+        # arr = np.random.normal(1, 1, size=100)
+        # fig, ax = plt.subplots()
+        # ax.hist(arr, bins=20)
+
+        # st.pyplot(fig)
         # print(list(suggested_topics['Topics']))
 
         # print(pd.DataFrame(np.random.randn(10, 2), columns=["a", "b"]))
@@ -106,6 +133,9 @@ if review != "":
             )
 
 
+
+
+
 # options = st.multiselect(
 #     'What are your favorite colors',
 #     ['Mizyena', 'Tahfouna', 'Red', 'Blue'],
@@ -115,7 +145,6 @@ if review != "":
 # import time
 # import requests
 #
-# import streamlit as st
 # from streamlit_lottie import st_lottie
 # from streamlit_lottie import st_lottie_spinner
 #
