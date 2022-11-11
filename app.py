@@ -39,10 +39,6 @@ st.set_page_config(
 )
 
 
-
-
-
-
 with st.sidebar:
     # from streamlit_option_menu import option_menu
     # selected = option_menu("", ["Home", 'Settings'], icons=['house', 'gear'],
@@ -58,7 +54,7 @@ with st.sidebar:
     page_js()
 
 st.markdown("<h3>💬 Review Analyzer | Topic Modeling</h3>", unsafe_allow_html=True)
-with st.expander("💡  Présentation du projet"):
+with st.expander("💡 Présentation du projet"):
     st.write("""
         L’intention de ce projet est de développer et mettre en œuvre des compétences de prétraitement de texte 
         et des techniques d’extraction de features spécifiques aux données non structurées de type texte dans le but 
@@ -70,7 +66,13 @@ with st.expander("💡  Présentation du projet"):
     etape_2.info("Etape 2️⃣ : Vectorisation et modélisation 🧠")
     etape_3.info("Etape 3️⃣ : Développement application web locale ✨")
     etape_4.info("Etape 4️⃣ : Déploiement application web 🚀")
+
+with st.expander("📃 Données"):
     st.dataframe(df_cleaned.iloc[:, 0:2], height=250, use_container_width=True)
+
+with st.expander("🚀 Code source"):
+    with open('cleaned_app.py', encoding="utf8") as f:
+        st.code(f'{f.read()}')
 
 
 review = st.text_area("Entrez un texte", height=150, max_chars=5000, key='review')

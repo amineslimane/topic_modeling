@@ -6,11 +6,11 @@ import streamlit.components.v1 as components
 
 uploaded_pickled_model = pickle.load(open('nmf_model/model_yasmine', 'rb'))
 model_vectorizer = pickle.load(open('nmf_model/vectorizer_yasmine', 'rb'))
-topics = ['Staff management', '👨‍🍳 Food Quality', '🍕 Pizza', '🐔 Menu Chicken', '🥣 Quality', '⏱ Service time',
+topics = ['Staff management', '👨‍🍳 Food Quality', '🍕 Pizza', '🐔 Menu Chicken', '🥣Quality', '⏱ Service time',
            '🍔 Burger', '🕘 Waiting Time', '🖐 Experience', '🥤 Drinks', '🍴 Ordering & Delivery to table', '🌍 Location',
            '🛎️ Customer Service',  '🍣 Sushi and Rice', '🌍 Place Environnement']
 
-
+# 🍲
 def topics_suggestion(text, nb):
     transformed_text = model_vectorizer.transform([text])
     predicted_topics = uploaded_pickled_model.transform(transformed_text)
