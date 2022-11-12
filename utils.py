@@ -54,3 +54,31 @@ def wait_spinner():
     with st.spinner('⏳ Wait for it...'):
         time.sleep(5)
     st.success('Success!')
+
+
+
+open_in_github_svg = open('static/images/open_in_github.svg', 'r', encoding="utf8").read()
+open_in_colab_svg = open('static/images/open_in_colab.svg', 'r', encoding="utf8").read()
+open_in_kaggle = open('static/images/open_in_kaggle.svg', 'r', encoding="utf8").read()
+def show_code(filename):
+    st.header("📃 " + filename)
+    if filename in ["preprocessing.py", "build_model.py"]:
+        filepath = "machine_learning/" + filename
+    else:
+        filepath = filename
+    code_file = open(filepath, 'r', encoding="utf8").read()
+    st.markdown(
+        """
+            <a href='https://github.com/amineslimane/topic_modeling/blob/master/{}' style='display: inline-block; margin-right:5px; margin-bottom:10px; color: white;'>
+                {}</svg>
+            </a>
+            <a href='https://colab.research.google.com/github/amineslimane/topic_modeling/blob/master/{}' style='display: inline-block; margin-right:5px; margin-bottom:10px; color: white;'>
+                {}</svg>
+            </a>
+            <a href='#' style='display: inline-block; margin-right:5px; margin-bottom:10px; color: white;'>
+                {}</svg>
+            </a>
+        """.format(filepath, open_in_github_svg, filepath.replace("py", "ipynb"), open_in_colab_svg, open_in_kaggle),
+        unsafe_allow_html=True)
+    st.download_button('Download', code_file, file_name=filename)
+    st.code(f'{code_file}')
