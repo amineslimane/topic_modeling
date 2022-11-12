@@ -19,13 +19,13 @@ df_cleaned.columns = ["📃 Text", "⭐ Stars", "Length", "🧼 Cleaned Text"]
 df_negative.columns = ["📃 Text", "⭐ Stars", "Length", "🧼 Cleaned Text"]
 
 def index_input_callback():
-    st.session_state['review'] = df.iloc[index_input]['📃 Text']
+    st.session_state['review'] = df_negative.iloc[index_input]['📃 Text']
 
 
 def aleatoire_callback():
-    random_index = np.random.randint(df.shape[0], size=1)[0]
+    random_index = np.random.randint(df_negative.shape[0], size=1)[0]
     st.session_state['index_input'] = random_index
-    st.session_state['review'] = df.iloc[index_input]['📃 Text']
+    st.session_state['review'] = df_negative.iloc[index_input]['📃 Text']
 
 
 # im = Image.open("favicon.ico")
