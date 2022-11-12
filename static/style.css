@@ -8,7 +8,6 @@ footer.css-qri22k {
 }
 
 
-
 div[data-testid="stHorizontalBlock"] div.e1tzin5v2 {
     background-color: #edf2ff;
     border: 1px solid #0c19ce;
@@ -18,7 +17,6 @@ div[data-testid="stHorizontalBlock"] div.e1tzin5v2 {
 
 div.streamlit-expanderContent div div div div.css-ocqkz7.e1tzin5v4 {
     padding: 0;
-    background-color: red;
 }
 
 div.css-1xarl3l {
@@ -32,3 +30,7 @@ div.css-50ug3q {
     display: unset;
     text-align: center;
 }
+
+/*.stDownloadButton {*/
+/*    display: none;*/
+/*}*/

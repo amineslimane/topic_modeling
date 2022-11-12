@@ -1,34 +1,29 @@
 import streamlit as st
 import pandas as pd
 import numpy as np
-from utils import *
+from utils import topics_suggestion, wait_spinner
 import threading
+import streamlit.components.v1 as components
 
-from streamlit_pandas_profiling import st_profile_report
-import os
-import datetime as dt
-from PIL import Image
-import plotly.express as px
-from pycaret.regression import setup, compare_models, pull, save_model, load_model
-import pandas_profiling
-from operator import index
+import time
 
-df = pd.read_csv('dataset.csv', sep=",", index_col=None)
 
-df_cleaned = pd.read_csv('dataset_cleaned.csv', sep=",", index_col=None)
-df_cleaned.columns = ["📃 Texte", "⭐ Stars", "Length", "Cleaned Text"]
+df = pd.read_csv('data/dataset.csv', sep=",", index_col=None)
+df_cleaned = pd.read_csv('data/dataset_cleaned.csv', sep=",", index_col=None)
+df_negative = pd.read_csv('data/dataset_negative.csv', sep=",", index_col=None)
 
+df.columns = ["📃 Text", "⭐ Stars"]
+df_cleaned.columns = ["📃 Text", "⭐ Stars", "Length", "🧼 Cleaned Text"]
+df_negative.columns = ["📃 Text", "⭐ Stars", "Length", "🧼 Cleaned Text"]
 
 def index_input_callback():
-    st.session_state['review'] = df.iloc[index_input]['text']
+    st.session_state['review'] = df.iloc[index_input]['📃 Text']
 
 
 def aleatoire_callback():
     random_index = np.random.randint(df.shape[0], size=1)[0]
     st.session_state['index_input'] = random_index
-    st.session_state['review'] = df.iloc[index_input]['text']
-
-
+    st.session_state['review'] = df.iloc[index_input]['📃 Text']
 
 
 # im = Image.open("favicon.ico")
@@ -53,6 +48,7 @@ with st.sidebar:
     with open('static/style.css') as f:
         css_component = f'<style>{f.read()}</style>'
     st.markdown(css_component, unsafe_allow_html=True)
+
     with open('static/main.js') as f:
         javascript_component = f'<script>{f.read()}</script>'
     components.html(javascript_component, height=0)
@@ -72,11 +68,48 @@ with st.expander("💡 Présentation du projet"):
     etape_4.info("Etape 4️⃣ : Déploiement application web 🚀")
 
 with st.expander("📃 Données"):
-    st.dataframe(df_cleaned.iloc[:, 0:2], height=250, use_container_width=True)
+    tab1, tab2, tab3 = st.tabs(["📃 Dataset", "🧼 Cleaned Dataset", "👎 Negative Dataset"])
+
+    with tab1:
+        st.header("📃 Dataset")
+        data_file = open('data/dataset.csv', 'r', encoding="utf8").read()
+        st.download_button('Download dataset', data_file, file_name="dataset.csv")
+        st.dataframe(df, height=250, use_container_width=True)
+
+    with tab2:
+        st.header("🧼 Cleaned Dataset")
+        data_file = open('data/dataset_cleaned.csv', 'r', encoding="utf8").read()
+        st.download_button('Download data', data_file, file_name="dataset_cleaned.csv")
+        st.dataframe(df_cleaned, height=250, use_container_width=True)
+
+    with tab3:
+        st.header("👎 Negative Dataset")
+        data_file = open('data/dataset_negative.csv', 'r', encoding="utf8").read()
+        st.download_button('Download data', data_file, file_name="dataset_negative.csv")
+        st.dataframe(df_negative, height=250, use_container_width=True)
+
 
 with st.expander("🚀 Code source"):
-    with open('cleaned_app.py', encoding="utf8") as f:
-        st.code(f'{f.read()}')
+    open_in_github_svg = open('static/images/open_in_github.svg', 'r', encoding="utf8").read()
+    open_in_colab_svg = open('static/images/open_in_colab.svg', 'r', encoding="utf8").read()
+    open_in_kaggle = open('static/images/open_in_kaggle.svg', 'r', encoding="utf8").read()
+    st.markdown(
+        """
+            <a href='https://github.com/amineslimane/topic_modeling' style='display: inline-block; margin-right:5px; margin-bottom:10px; color: white;'>
+                {}</svg>
+            </a>
+            <a href='#' style='display: inline-block; margin-right:5px; margin-bottom:10px; color: white;'>
+                {}</svg>
+            </a>
+            <a href='#' style='display: inline-block; margin-right:5px; margin-bottom:10px; color: white;'>
+                {}</svg>
+            </a>
+        """.format(open_in_github_svg, open_in_colab_svg, open_in_kaggle),
+        unsafe_allow_html=True)
+    code_file = open('cleaned_app.py', 'r', encoding="utf8").read()
+    st.download_button('Download code', code_file, file_name="topic_modeling_app.py")
+    st.code(f'{code_file}')
+
 
 
 review = st.text_area("Entrez un texte", height=150, max_chars=5000, key='review')
@@ -92,36 +125,18 @@ if review != "":
         suggested_topics = topics_suggestion(review, number)
         columns_components = st.columns(len(suggested_topics))
 
-        aaa = {"Quality": 7.7, "Food Quality": 5.3, "Waiting Time": 4.8}
-        # aa = pd.DataFrame(aaa, columns=["Topics", "Probabilité"], index=["Topics"])
-        # aa.set_index(aa['Topics'])
-        # st.bar_chart(aaa)
-        # import matplotlib.pyplot as plt
-        # import numpy as np
+        # "Energy Costs By Month"
+        # source = pd.DataFrame({
+        #     'Probabilité': [0.8, 0.2],
+        #     'Topic': ['topic 1', 'topic 2']
+        # })
+        # import altair as alt
         #
-        # # Plot
-        # fig, ax1= plt.subplots(1, 1, figsize=(10, 4), dpi=120, sharey=True)
-        #
-        # # Topic Distribution by Dominant Topics
-        # ax1.bar(x='Dominant_Topic', height='count', data=[5, 6,7], width=5, color='firebrick')
-        # ax1.set_xticks(["Topic 1", "Topic 2", "Topic 3"])
-        # # tick_formatter = FuncFormatter(lambda x, pos: 'Topic ' + str(x) + '\n' + df_top3words.loc[df_top3words.topic_id == x, 'words'].values[0])
-        # # ax1.xaxis.set_major_formatter(tick_formatter)
-        # ax1.set_title('Number of Documents by Dominant Topic', fontdict=dict(size=10))
-        # ax1.set_ylabel('Number of Documents')
-        # ax1.set_ylim(0, 1000)
-
-        # arr = np.random.normal(1, 1, size=100)
-        # fig, ax = plt.subplots()
-        # ax.hist(arr, bins=20)
-
-        # st.pyplot(fig)
-        # print(list(suggested_topics['Topics']))
-
-        # print(pd.DataFrame(np.random.randn(10, 2), columns=["a", "b"]))
-        # chart_data = pd.DataFrame(suggested_topics, columns=["Topics","Probabilité"], index=["Topics"])
-        # st.title(chart_data)
-        # st.bar_chart(chart_data)
+        # bar_chart = alt.Chart(source).mark_bar().encode(
+        #     y='Probabilité:Q',
+        #     x='Topic:O',
+        # )
+        # st.altair_chart(bar_chart, use_container_width=True)
 
 
         i = 0
@@ -144,8 +159,7 @@ if review != "":
 
 # options = st.multiselect(
 #     'What are your favorite colors',
-#     ['Mizyena', 'Tahfouna', 'Red', 'Blue'],
-#     ['Mizyena', 'Tahfouna'])
+#     ['Red', 'Blue'],)
 #
 # st.write('You selected:', options)
 # import time
@@ -194,9 +208,6 @@ if review != "":
 #                          max_value=5,
 #                          step=1,
 #                          key='slider', on_change=update_numin)
-
-
-
 
 
 
