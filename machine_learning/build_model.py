@@ -18,9 +18,9 @@ topics = [
     'Menu Chicken',
     'Drinks',
     'Experience',
-    'Sushi and Rice',
-    'Taste',
     'Location and Experience',
+    'Taste',
+    'Sushi and Rice',
     "Sandwich"]
 
 # Construction du modèle

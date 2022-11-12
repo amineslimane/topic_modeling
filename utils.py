@@ -4,8 +4,8 @@ import time
 import streamlit as st
 
 
-model = pickle.load(open('nmf_model/model_amine', 'rb'))
-vectorizer = pickle.load(open('nmf_model/vectorizer_amine', 'rb'))
+model = pickle.load(open('nmf_model/model', 'rb'))
+vectorizer = pickle.load(open('nmf_model/vectorizer', 'rb'))
 topics = ['Staff management', '👨‍🍳 Food Quality', '🍕 Pizza', '🐔 Menu Chicken', '🥣Quality', '⏱ Service time',
            '🍔 Burger', '🕘 Waiting Time', '🖐 Experience', '🥤 Drinks', '🍴 Ordering & Delivery to table', '🌍 Location',
            '🛎️ Customer Service',  '🍣 Sushi and Rice', '🌍 Place Environnement']
