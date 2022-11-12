@@ -1,6 +1,8 @@
 import streamlit as st
 import pandas as pd
 import numpy as np
+from PIL import Image
+
 from utils import topics_suggestion, wait_spinner
 import threading
 import streamlit.components.v1 as components
@@ -66,6 +68,14 @@ with st.expander("💡 Présentation du projet"):
     etape_2.info("Etape 2️⃣ : Vectorisation et modélisation 🧠")
     etape_3.info("Etape 3️⃣ : Développement application web locale ✨")
     etape_4.info("Etape 4️⃣ : Déploiement application web 🚀")
+
+    col_img_1, col_img_2 = st.columns(2)
+    image_negative_words = Image.open('static/images/most frequent negative words.png')
+    image_positive_words = Image.open('static/images/most frequent positive words.png')
+    with col_img_1:
+        st.image(image_negative_words, caption='Most frequent negative words')
+    with col_img_2:
+        st.image(image_positive_words, caption='Most frequent positive words')
 
 with st.expander("📃 Données"):
     tab1, tab2, tab3 = st.tabs(["📃 Dataset", "🧼 Cleaned Dataset", "👎 Negative Dataset"])
