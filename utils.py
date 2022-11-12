@@ -56,7 +56,6 @@ def wait_spinner():
     st.success('Success!')
 
 
-
 open_in_github_svg = open('static/images/open_in_github.svg', 'r', encoding="utf8").read()
 open_in_colab_svg = open('static/images/open_in_colab.svg', 'r', encoding="utf8").read()
 open_in_kaggle = open('static/images/open_in_kaggle.svg', 'r', encoding="utf8").read()

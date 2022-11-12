@@ -54,7 +54,17 @@ with st.sidebar:
 
 # Main Content
 
-st.markdown("<h3>💬 Review Analyzer | Topic Modeling</h3>", unsafe_allow_html=True)
+st.markdown("", unsafe_allow_html=True)
+
+st.markdown(
+    """
+        <h3>💬 Review Analyzer | Topic Modeling
+            <a href='https://github.com/amineslimane/topic_modeling' style='display: inline-block; margin-left:10px; margin-bottom:10px; color: white;'>
+                {}</svg>
+            </a>
+        </h3>
+    """.format(open_in_github_svg),
+    unsafe_allow_html=True)
 
 with st.expander("💡 Présentation du projet"):
     st.write("""
@@ -99,21 +109,6 @@ with st.expander("🧊 Données"):
         st.dataframe(df_negative, height=250, use_container_width=True)
 
 with st.expander("🚀 Code source"):
-
-    st.markdown(
-        """
-            <a href='https://github.com/amineslimane/topic_modeling/blob/master/app.py' style='display: inline-block; margin-right:5px; margin-bottom:10px; color: white;'>
-                {}</svg>
-            </a>
-            <a href='https://colab.research.google.com/github/amineslimane/topic_modeling/blob/master/machine_learning/build_model.ipynb' style='display: inline-block; margin-right:5px; margin-bottom:10px; color: white;'>
-                {}</svg>
-            </a>
-            <a href='#' style='display: inline-block; margin-right:5px; margin-bottom:10px; color: white;'>
-                {}</svg>
-            </a>
-        """.format(open_in_github_svg, open_in_colab_svg, open_in_kaggle),
-        unsafe_allow_html=True)
-
     code_tab1, code_tab2, code_tab3 = st.tabs(["📃 app.py", "📃 preprocessing.py", "📃 build_model.py"])
     with code_tab1:
         show_code("app.py")
