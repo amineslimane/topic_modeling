@@ -116,7 +116,7 @@ with st.expander("🚀 Code source"):
             </a>
         """.format(open_in_github_svg, open_in_colab_svg, open_in_kaggle),
         unsafe_allow_html=True)
-    code_file = open('cleaned_app.py', 'r', encoding="utf8").read()
+    code_file = open('app.py', 'r', encoding="utf8").read()
     st.download_button('Download code', code_file, file_name="topic_modeling_app.py")
     st.code(f'{code_file}')
 
