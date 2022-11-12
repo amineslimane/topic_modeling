@@ -2,11 +2,10 @@ import streamlit as st
 import pandas as pd
 import numpy as np
 from PIL import Image
-
-from utils import topics_suggestion, wait_spinner
+from utils import topics_suggestion, wait_spinner, review_is_positive
 import threading
 import streamlit.components.v1 as components
-
+import altair as alt
 import time
 
 
@@ -17,6 +16,7 @@ df_negative = pd.read_csv('data/dataset_negative.csv', sep=",", index_col=None)
 df.columns = ["📃 Text", "⭐ Stars"]
 df_cleaned.columns = ["📃 Text", "⭐ Stars", "Length", "🧼 Cleaned Text"]
 df_negative.columns = ["📃 Text", "⭐ Stars", "Length", "🧼 Cleaned Text"]
+
 
 def index_input_callback():
     st.session_state['review'] = df_negative.iloc[index_input]['📃 Text']
@@ -35,11 +35,8 @@ st.set_page_config(
     layout="wide",
 )
 
-
+# Sidebar
 with st.sidebar:
-    # from streamlit_option_menu import option_menu
-    # selected = option_menu("", ["Home", 'Settings'], icons=['house', 'gear'],
-    #                        menu_icon="cast", default_index=0)
     st.title("Quel texte analyser ?")
     analyser_choice = st.radio("Quel texte analyser ?", ["Avis dataset", "Texte libre"])
 
@@ -55,7 +52,10 @@ with st.sidebar:
         javascript_component = f'<script>{f.read()}</script>'
     components.html(javascript_component, height=0)
 
+# Main Content
+
 st.markdown("<h3>💬 Review Analyzer | Topic Modeling</h3>", unsafe_allow_html=True)
+
 with st.expander("💡 Présentation du projet"):
     st.write("""
         L’intention de ce projet est de développer et mettre en œuvre des compétences de prétraitement de texte 
@@ -98,8 +98,8 @@ with st.expander("🧊 Données"):
         st.download_button('Download negative data', data_file, file_name="dataset_negative.csv")
         st.dataframe(df_negative, height=250, use_container_width=True)
 
-
 with st.expander("🚀 Code source"):
+    # "https://colab.research.google.com/github/amineslimane/topic_modeling/blob/master/app.py"
     open_in_github_svg = open('static/images/open_in_github.svg', 'r', encoding="utf8").read()
     open_in_colab_svg = open('static/images/open_in_colab.svg', 'r', encoding="utf8").read()
     open_in_kaggle = open('static/images/open_in_kaggle.svg', 'r', encoding="utf8").read()
@@ -116,50 +116,74 @@ with st.expander("🚀 Code source"):
             </a>
         """.format(open_in_github_svg, open_in_colab_svg, open_in_kaggle),
         unsafe_allow_html=True)
-    code_file = open('app.py', 'r', encoding="utf8").read()
-    st.download_button('Download code', code_file, file_name="topic_modeling_app.py")
-    st.code(f'{code_file}')
+
+    code_tab1, code_tab2, code_tab3 = st.tabs(["📃 app.py", "📃 Cleaned Dataset", "📃 Negative Dataset"])
+
+    with code_tab1:
+        st.header("📃 app.py")
+        code_file1 = open('app.py', 'r', encoding="utf8").read()
+        st.download_button('Download', code_file1, file_name="app.py")
+        st.code(f'{code_file1}')
+
+    with code_tab2:
+        st.header("📃 preprocessing.py")
+        code_file2 = open('machine_learning/preprocessing.py', 'r', encoding="utf8").read()
+        st.download_button('Download', code_file2, file_name="preprocessing.py")
+        st.code(f'{code_file2}')
+
+    with code_tab3:
+        st.header("📃 build_model.py")
+        code_tab3 = open('machine_learning/build_model.py', 'r', encoding="utf8").read()
+        st.download_button('Download', code_tab3, file_name="build_model.py")
+        st.code(f'{code_tab3}')
 
 
 review = st.text_area("Entrez un texte", height=150, max_chars=5000, key='review')
 number = st.slider('Nombre de topics', value=3, step=1, min_value=1, max_value=15)
 
-
 if review != "":
     detect_topic_btn = st.button(label="🤯 Détecter le sujet d'insatisfaction")
 
     if detect_topic_btn:
-        t = threading.Thread(target=wait_spinner())
-        t.start()
-        suggested_topics = topics_suggestion(review, number)
-        columns_components = st.columns(len(suggested_topics))
+        if review_is_positive(review):
+            st.warning("This review is positive, write negative opinion to detect the topic")
+        else:
+            t = threading.Thread(target=wait_spinner())
+            t.start()
+            suggested_topics = topics_suggestion(review, number)
+            columns_components = st.columns(len(suggested_topics))
 
-        # "Energy Costs By Month"
-        # source = pd.DataFrame({
-        #     'Probabilité': [0.8, 0.2],
-        #     'Topic': ['topic 1', 'topic 2']
-        # })
-        # import altair as alt
-        #
-        # bar_chart = alt.Chart(source).mark_bar().encode(
-        #     y='Probabilité:Q',
-        #     x='Topic:O',
-        # )
-        # st.altair_chart(bar_chart, use_container_width=True)
+            topics = [x[0] for x in suggested_topics]
+            probabilities = [float(x[1].replace("%", ""))/100 for x in suggested_topics]
+            topic_probability_combined = [" ".join(x) for x in suggested_topics]
 
-
-        i = 0
-        for col in columns_components:
-            col.metric(suggested_topics[i][0], suggested_topics[i][1])
-            i += 1
-        st.balloons()
+            source = pd.DataFrame({
+                'Probabilité': probabilities,
+                'Topic': topics,
+                'Topic ': topic_probability_combined
+            })
 
 
-        if len(suggested_topics) != number:
-            st.warning(
-                "⚠️ Le nombre de topic que vous avez demandé est supérieur au nombre de topic "
-                "qui peuvent être en relation avec ce review (Probabilité de similarité égale à 0️%)"
-            )
+            bar_chart = alt.Chart(source,title="Topic Modeling").mark_bar(color='#03045e').encode(
+                y='Probabilité',
+                x='Topic',
+                tooltip=["Topic "],
+            ).interactive()
+            st.altair_chart(bar_chart, use_container_width=True)
+
+            i = 0
+            for col in columns_components:
+                col.metric(suggested_topics[i][0], suggested_topics[i][1])
+                i += 1
+            st.balloons()
+
+            if len(suggested_topics) != number:
+                st.warning(
+                    "⚠️ Le nombre de topic que vous avez demandé est supérieur au nombre de topic "
+                    "qui peuvent être en relation avec ce review (Probabilité de similarité égale à 0️%)"
+                )
+
+
 
 # options = st.multiselect(
 #     'What are your favorite colors',
@@ -212,41 +236,6 @@ if review != "":
 #                          max_value=5,
 #                          step=1,
 #                          key='slider', on_change=update_numin)
-
-
-
-# image = Image.open('image.png')
-# st.image(image, caption='Sunrise by the mountains')
-
-
-# if choice == "Upload":
-#     st.title("Upload Your Dataset")
-#     file = st.file_uploader("Upload Your Dataset")
-#     if file:
-#         df = pd.read_csv(file, index_col=None)
-#         df.to_csv('dataset.csv', index=None)
-#         st.dataframe(df)
-#
-# if choice == "Profiling":
-#     st.title("Exploratory Data Analysis")
-#     profile_df = df.profile_report()
-#     st_profile_report(profile_df)
-#
-# if choice == "Modelling":
-#     chosen_target = st.selectbox('Choose the Target Column', df.columns)
-#     if st.button('Run Modelling'):
-#         setup(df, target=chosen_target, silent=True)
-#         setup_df = pull()
-#         st.dataframe(setup_df)
-#         best_model = compare_models()
-#         compare_df = pull()
-#         st.dataframe(compare_df)
-#         save_model(best_model, 'best_model')
-#
-# if choice == "Download":
-#     with open('best_model.pkl', 'rb') as f:
-#         st.download_button('Download Model', f, file_name="best_model.pkl")
-
 
 
 # def local_css(file_name):

@@ -2,13 +2,36 @@ import numpy as np
 import pickle
 import time
 import streamlit as st
+from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
 
+
+topics = [
+    '👨 Staff management',
+    '🕘 Waiting Time',
+    '🍕 Pizza',
+    '🛎️ Customer Service',
+    '👨‍🍳 Food Quality',
+    '🍔 Burger',
+    '🍴 Ordering & Delivery to table',
+    '🌍 Place Environnement',
+    '🐔 Menu Chicken',
+    '🥤 Drinks',
+    'Experience',
+    '🌍 Location',
+    '😵 Taste',
+    '🍣 Sushi and Rice',
+    '🥪 Sandwich']
 
 model = pickle.load(open('nmf_model/model', 'rb'))
 vectorizer = pickle.load(open('nmf_model/vectorizer', 'rb'))
-topics = ['Staff management', '👨‍🍳 Food Quality', '🍕 Pizza', '🐔 Menu Chicken', '🥣Quality', '⏱ Service time',
-           '🍔 Burger', '🕘 Waiting Time', '🖐 Experience', '🥤 Drinks', '🍴 Ordering & Delivery to table', '🌍 Location',
-           '🛎️ Customer Service',  '🍣 Sushi and Rice', '🌍 Place Environnement']
+
+
+def review_is_positive(sentence):
+    sid_obj = SentimentIntensityAnalyzer()
+    sentiment_dict = sid_obj.polarity_scores(sentence)
+    if sentiment_dict['compound'] >= 0.4:
+        return True
+    return False
 
 
 def topics_suggestion(text, nb):

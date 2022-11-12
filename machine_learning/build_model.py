@@ -3,25 +3,24 @@ import pandas as pd
 from sklearn.decomposition import NMF
 import pickle
 
-# topics = ['Staff management', 'Food Quality', 'Pizza', 'Menu Chicken', 'Quality', 'Service time',
-#           'Burger', 'Waiting Time', 'Experience', 'Drinks', 'Ordering & Delivery to table', 'Location',
-#           'Customer Service', 'Sushi and Rice', 'Place Environnement']
+
 topics = [
-    'Staff management',
-    'Waiting Time',
-    'Pizza',
-    'Customer Service',
-    'Food Quality',
-    'Burger',
-    'Ordering & Delivery to table',
-    'Place Environnement',
-    'Menu Chicken',
-    'Drinks',
+    '👨 Staff management',
+    '🕘 Waiting Time',
+    '🍕 Pizza',
+    '🛎️ Customer Service',
+    '👨‍🍳 Food Quality',
+    '🍔 Burger',
+    '🍴 Ordering & Delivery to table',
+    '🌍 Place Environnement',
+    '🐔 Menu Chicken',
+    '🥤 Drinks',
     'Experience',
-    'Location and Experience',
-    'Taste',
-    'Sushi and Rice',
-    "Sandwich"]
+    '🌍 Location',
+    '😵 Taste',
+    '🍣 Sushi and Rice',
+    '🥪 Sandwich']
+
 
 # Construction du modèle
 def build_model(df):
@@ -52,7 +51,3 @@ def display_predicted_topics(model, feature_names, num_top_words,topic_names=Non
 # Construction du modèle
 dataset_negative_df = pd.read_csv("../data/dataset_negative.csv")
 build_model(dataset_negative_df)
-
-# model = pickle.load(open('../nmf_model/model', 'rb'))
-# vectorizer = pickle.load(open('../nmf_model/vectorizer', 'rb'))
-# display_predicted_topics(model, vectorizer.get_feature_names(), 10, topics)
