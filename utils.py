@@ -2,12 +2,10 @@ import numpy as np
 import pickle
 import time
 import streamlit as st
-import base64
-from pathlib import Path
 
 
-uploaded_pickled_model = pickle.load(open('nmf_model/model_yasmine', 'rb'))
-model_vectorizer = pickle.load(open('nmf_model/vectorizer_yasmine', 'rb'))
+uploaded_pickled_model = pickle.load(open('nmf_model/model', 'rb'))
+model_vectorizer = pickle.load(open('nmf_model/vectorizer', 'rb'))
 topics = ['Staff management', '👨‍🍳 Food Quality', '🍕 Pizza', '🐔 Menu Chicken', '🥣Quality', '⏱ Service time',
            '🍔 Burger', '🕘 Waiting Time', '🖐 Experience', '🥤 Drinks', '🍴 Ordering & Delivery to table', '🌍 Location',
            '🛎️ Customer Service',  '🍣 Sushi and Rice', '🌍 Place Environnement']
@@ -33,9 +31,3 @@ def wait_spinner():
     with st.spinner('⏳ Wait for it...'):
         time.sleep(5)
     st.success('Success!')
-
-
-def img_to_bytes(img_path):
-    img_bytes = Path(img_path).read_bytes()
-    encoded = base64.b64encode(img_bytes).decode()
-    return encoded

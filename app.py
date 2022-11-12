@@ -77,7 +77,7 @@ with st.expander("💡 Présentation du projet"):
     with col_img_2:
         st.image(image_positive_words, caption='Most frequent positive words')
 
-with st.expander("📃 Données"):
+with st.expander("🧊 Données"):
     tab1, tab2, tab3 = st.tabs(["📃 Dataset", "🧼 Cleaned Dataset", "👎 Negative Dataset"])
 
     with tab1:
@@ -89,13 +89,13 @@ with st.expander("📃 Données"):
     with tab2:
         st.header("🧼 Cleaned Dataset")
         data_file = open('data/dataset_cleaned.csv', 'r', encoding="utf8").read()
-        st.download_button('Download data', data_file, file_name="dataset_cleaned.csv")
+        st.download_button('Download cleaned data', data_file, file_name="dataset_cleaned.csv")
         st.dataframe(df_cleaned, height=250, use_container_width=True)
 
     with tab3:
         st.header("👎 Negative Dataset")
         data_file = open('data/dataset_negative.csv', 'r', encoding="utf8").read()
-        st.download_button('Download data', data_file, file_name="dataset_negative.csv")
+        st.download_button('Download negative data', data_file, file_name="dataset_negative.csv")
         st.dataframe(df_negative, height=250, use_container_width=True)
 
 

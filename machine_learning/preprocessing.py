@@ -4,10 +4,8 @@ import os
 import matplotlib.pyplot as plt
 import seaborn as sns
 from sklearn.feature_extraction.text import CountVectorizer
-from sklearn.feature_extraction.text import TfidfVectorizer
-from sklearn.decomposition import NMF
 from wordcloud import WordCloud
-import pickle
+
 
 import nltk
 from nltk.tokenize import RegexpTokenizer
@@ -105,35 +103,6 @@ def preprocess_text(text):
     return text
 
 
-def display_predicted_topics(model, feature_names, num_top_words,topic_names=None):
-    for ix, topic in enumerate(model.components_):
-        if not topic_names or not topic_names[ix]:
-            print("\nTopic ", ix)
-        else:
-            print("\nTopic: '",topic_names[ix],"'")
-        print(", ".join([feature_names[i] \
-             for i in topic.argsort()[:-num_top_words - 1:-1]]))
-
-
-# Construction du modèle
-def build_model(df):
-    topics = ['Staff management', 'Food Quality', 'Pizza', 'Menu Chicken', 'Quality', 'Service time',
-              'Burger', 'Waiting Time', 'Experience', 'Drinks', 'Ordering & Delivery to table', 'Location',
-              'Customer Service', 'Sushi and Rice', 'Place Environnement']
-
-    vectorizer = TfidfVectorizer(ngram_range=(1, 1), max_df=.8, min_df=.02)
-    data = vectorizer.fit_transform(df.text_cleaned)
-    matrix_df = pd.DataFrame(data.toarray(), columns=vectorizer.get_feature_names())
-    matrix_df.index = df.index
-
-    nmf_model = NMF(15)
-    # display_topics(nmf_model, vectorizer.get_feature_names(), 10, topics)
-    with open('../nmf_model/model_yasmine','wb') as file:
-        pickle.dump(nmf_model, file)
-    with open('../nmf_model/vectorizer_yasmine','wb') as file:
-        pickle.dump(vectorizer, file)
-
-
 DATASET_FILE_PATH = "../data/dataset.csv"
 dataset_df = pd.read_csv(DATASET_FILE_PATH)
 dataset_df["length"] = dataset_df["text"].apply(lambda x: len(x.split()))
@@ -145,6 +114,3 @@ dataset_df.to_csv("../data/dataset_cleaned.csv", index=False)
 # Extraction du jeu de données d'avis négatifs
 dataset_negative_df = dataset_df[dataset_df.stars < 3]
 dataset_negative_df.to_csv("../data/dataset_negative.csv", index=False)
-
-# Construction du modèle
-build_model(dataset_negative_df)
