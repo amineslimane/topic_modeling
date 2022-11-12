@@ -3,21 +3,36 @@ import pandas as pd
 from sklearn.decomposition import NMF
 import pickle
 
+# topics = ['Staff management', 'Food Quality', 'Pizza', 'Menu Chicken', 'Quality', 'Service time',
+#           'Burger', 'Waiting Time', 'Experience', 'Drinks', 'Ordering & Delivery to table', 'Location',
+#           'Customer Service', 'Sushi and Rice', 'Place Environnement']
+topics = [
+    'Staff management',
+    'Waiting Time',
+    'Pizza',
+    'Customer Service',
+    'Food Quality',
+    'Burger',
+    'Ordering & Delivery to table',
+    'Place Environnement',
+    'Menu Chicken',
+    'Drinks',
+    'Experience',
+    'Sushi and Rice',
+    'Taste',
+    'Location and Experience',
+    "Sandwich"]
 
 # Construction du modèle
 def build_model(df):
-    topics = ['Staff management', 'Food Quality', 'Pizza', 'Menu Chicken', 'Quality', 'Service time',
-              'Burger', 'Waiting Time', 'Experience', 'Drinks', 'Ordering & Delivery to table', 'Location',
-              'Customer Service', 'Sushi and Rice', 'Place Environnement']
-
     vectorizer = TfidfVectorizer(ngram_range=(1, 1), max_df=.8, min_df=.02)
     data = vectorizer.fit_transform(df.text_cleaned)
     matrix_df = pd.DataFrame(data.toarray(), columns=vectorizer.get_feature_names())
     matrix_df.index = df.index
 
-    nmf_model = NMF(15)
+    nmf_model = NMF(15, max_iter=600)
     doc_topic = nmf_model.fit_transform(matrix_df)
-    # display_topics(nmf_model, vectorizer.get_feature_names(), 10, topics)
+    display_predicted_topics(nmf_model, vectorizer.get_feature_names(), 10, topics)
     with open('../nmf_model/model','wb') as file:
         pickle.dump(nmf_model, file)
     with open('../nmf_model/vectorizer','wb') as file:
@@ -37,3 +52,7 @@ def display_predicted_topics(model, feature_names, num_top_words,topic_names=Non
 # Construction du modèle
 dataset_negative_df = pd.read_csv("../data/dataset_negative.csv")
 build_model(dataset_negative_df)
+
+# model = pickle.load(open('../nmf_model/model', 'rb'))
+# vectorizer = pickle.load(open('../nmf_model/vectorizer', 'rb'))
+# display_predicted_topics(model, vectorizer.get_feature_names(), 10, topics)

@@ -121,7 +121,6 @@ with st.expander("🚀 Code source"):
     st.code(f'{code_file}')
 
 
-
 review = st.text_area("Entrez un texte", height=150, max_chars=5000, key='review')
 number = st.slider('Nombre de topics', value=3, step=1, min_value=1, max_value=15)
 
@@ -156,16 +155,11 @@ if review != "":
         st.balloons()
 
 
-
         if len(suggested_topics) != number:
             st.warning(
                 "⚠️ Le nombre de topic que vous avez demandé est supérieur au nombre de topic "
                 "qui peuvent être en relation avec ce review (Probabilité de similarité égale à 0️%)"
             )
-
-
-
-
 
 # options = st.multiselect(
 #     'What are your favorite colors',

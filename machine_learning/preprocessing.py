@@ -13,8 +13,8 @@ from nltk.stem import WordNetLemmatizer
 from nltk.corpus import stopwords
 import contractions
 
-import en_core_web_sm
-nlp = en_core_web_sm.load(disable=['parser', 'tagger', 'ner'])
+# import en_core_web_sm
+# nlp = en_core_web_sm.load(disable=['parser', 'tagger', 'ner'])
 nltk.download('punkt')
 nltk.download('averaged_perceptron_tagger')
 nltk.download('wordnet')
