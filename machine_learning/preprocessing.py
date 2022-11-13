@@ -1,10 +1,6 @@
 import pandas as pd
 import numpy as np
 import os
-# import matplotlib.pyplot as plt
-# import seaborn as sns
-# from sklearn.feature_extraction.text import CountVectorizer
-# from wordcloud import WordCloud
 
 
 import nltk
@@ -13,8 +9,6 @@ from nltk.stem import WordNetLemmatizer
 from nltk.corpus import stopwords
 import contractions
 
-# import en_core_web_sm
-# nlp = en_core_web_sm.load(disable=['parser', 'tagger', 'ner'])
 nltk.download('punkt')
 nltk.download('averaged_perceptron_tagger')
 nltk.download('wordnet')
@@ -37,18 +31,13 @@ def lemmatize_text(text):
     lemmatized_text_list = list()
     for word, tag in tokens_tagged:
         if tag.startswith('J'):
-            lemmatized_text_list.append(lemmatizer.lemmatize(word,
-                                                             'a'))  # Lemmatise adjectives. Not doing anything since we remove all adjective
-            # print(word, 'a')
+            lemmatized_text_list.append(lemmatizer.lemmatize(word,'a'))  # Lemmatise adjectives. Not doing anything since we remove all adjective
         elif tag.startswith('V'):
             lemmatized_text_list.append(lemmatizer.lemmatize(word, 'v'))  # Lemmatise verbs
-            # print(word, 'v')
         elif tag.startswith('N'):
             lemmatized_text_list.append(lemmatizer.lemmatize(word, 'n'))  # Lemmatise nouns
-            # print(word, 'n')
         elif tag.startswith('R'):
             lemmatized_text_list.append(lemmatizer.lemmatize(word, 'r'))  # Lemmatise adverbs
-            # print(word, 'r')
         else:
             lemmatized_text_list.append(
                 lemmatizer.lemmatize(word))  # If no tags has been found, perform a non specific lemmatisation
