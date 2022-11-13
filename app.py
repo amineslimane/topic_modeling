@@ -2,7 +2,7 @@ import streamlit as st
 import pandas as pd
 import numpy as np
 from PIL import Image
-from utils import topics_suggestion, wait_spinner, review_is_positive, show_code, open_in_github_svg, open_in_colab_svg, open_in_kaggle
+from utils import topics_suggestion, wait_spinner, review_is_positive, show_code, open_in_github2_svg
 import threading
 import streamlit.components.v1 as components
 import altair as alt
@@ -54,8 +54,6 @@ with st.sidebar:
 
 # Main Content
 
-st.markdown("", unsafe_allow_html=True)
-
 st.markdown(
     """
         <h3>💬 Review Analyzer | Topic Modeling
@@ -63,7 +61,7 @@ st.markdown(
                 {}</svg>
             </a>
         </h3>
-    """.format(open_in_github_svg),
+    """.format(open_in_github2_svg),
     unsafe_allow_html=True)
 
 with st.expander("💡 Présentation du projet"):
@@ -162,111 +160,3 @@ if review != "":
                     "⚠️ Le nombre de topic que vous avez demandé est supérieur au nombre de topic "
                     "qui peuvent être en relation avec ce review (Probabilité de similarité égale à 0️%)"
                 )
-
-
-
-# options = st.multiselect(
-#     'What are your favorite colors',
-#     ['Red', 'Blue'],)
-#
-# st.write('You selected:', options)
-# import time
-# import requests
-#
-# from streamlit_lottie import st_lottie
-# from streamlit_lottie import st_lottie_spinner
-#
-#
-# def load_lottieurl(url: str):
-#     r = requests.get(url)
-#     if r.status_code != 200:
-#         return None
-#     return r.json()
-#
-#
-# lottie_url_hello = "https://assets5.lottiefiles.com/packages/lf20_V9t630.json"
-# lottie_url_download = "https://assets4.lottiefiles.com/private_files/lf30_t26law.json"
-# lottie_hello = load_lottieurl(lottie_url_hello)
-# lottie_download = load_lottieurl(lottie_url_download)
-#
-# lottie_url_404 = "https://labs.nearpod.com/bodymovin/demo/markus/isometric/markus2.json"
-# lottie_404 = load_lottieurl(lottie_url_404)
-# st_lottie(lottie_404, width=500, key="404")
-#
-#
-# st_lottie(lottie_hello, width=200, key="hello")
-#
-# if st.button("Download"):
-#     with st_lottie_spinner(lottie_download, key="download"):
-#         time.sleep(5)
-#     st.balloons()
-
-# st.info("This project application helps you build and explore your data.")
-
-# def update_slider():
-#     st.session_state.slider = st.session_state.numeric
-#
-# def update_numin():
-#     st.session_state.numeric = st.session_state.slider
-#
-# val = st.number_input('Input', value=0, key='numeric', on_change=update_slider)
-#
-# slider_value = st.slider('slider', min_value=0,
-#                          value=val,
-#                          max_value=5,
-#                          step=1,
-#                          key='slider', on_change=update_numin)
-
-
-# def local_css(file_name):
-#     with open(file_name) as f:
-#         st.markdown('<style>{}</style>'.format(f.read()), unsafe_allow_html=True)
-#
-# def remote_css(url):
-#     st.markdown('<style src="{}"></style>'.format(url), unsafe_allow_html=True)
-#
-# def icon_css(icone_name):
-#     remote_css('https://fonts.googleapis.com/icon?family=Material+Icons')
-#
-# def icon(icon_name):
-#     st.markdown('<i class="material-icons">{}</i>'.format(icon_name), unsafe_allow_html=True)
-
-# local_css('style.css')
-# html_string = "<h3>this is an html string</h3><style>body{background-color:red}</style>"
-# st.markdown(html_string, unsafe_allow_html=True)
-# components.html("""
-#     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-#     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-#     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
-#     <style>body{background-color:red}</style>
-#     <div id="accordion">
-#       <div class="card">
-#         <div class="card-header" id="headingOne">
-#           <h5 class="mb-0">
-#             <button class="btn btn-link" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-#             Collapsible Group Item #1
-#             </button>
-#           </h5>
-#         </div>
-#         <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordion">
-#           <div class="card-body">
-#             Collapsible Group Item #1 content
-#           </div>
-#         </div>
-#       </div>
-#       <div class="card">
-#         <div class="card-header" id="headingTwo">
-#           <h5 class="mb-0">
-#             <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-#             Collapsible Group Item #2
-#             </button>
-#           </h5>
-#         </div>
-#         <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordion">
-#           <div class="card-body">
-#             Collapsible Group Item #2 content
-#           </div>
-#         </div>
-#       </div>
-#     </div>
-#     """,height=600,)

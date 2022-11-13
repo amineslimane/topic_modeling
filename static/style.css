@@ -8,7 +8,15 @@ footer.css-qri22k {
 }
 
 
-div[data-testid="stHorizontalBlock"] div.e1tzin5v2 {
+div.stAlert div {
+    border-radius: 15px;
+}
+
+div[data-testid="stImage"] img {
+    border-radius: 30px;
+}
+
+div[data-testid="stHorizontalBlock"] div.css-1r6slb0.e1tzin5v2 {
     background-color: #edf2ff;
     border: 1px solid #0c19ce;
     padding: 20px;

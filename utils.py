@@ -56,7 +56,8 @@ def wait_spinner():
     st.success('Success!')
 
 
-open_in_github_svg = open('static/images/open_in_github.svg', 'r', encoding="utf8").read()
+open_in_github1_svg = open('static/images/open_in_github.svg', 'r', encoding="utf8").read()
+open_in_github2_svg = open('static/images/open_in_github2.svg', 'r', encoding="utf8").read()
 open_in_colab_svg = open('static/images/open_in_colab.svg', 'r', encoding="utf8").read()
 open_in_kaggle = open('static/images/open_in_kaggle.svg', 'r', encoding="utf8").read()
 def show_code(filename):
@@ -77,7 +78,7 @@ def show_code(filename):
             <a href='#' style='display: inline-block; margin-right:5px; margin-bottom:10px; color: white;'>
                 {}</svg>
             </a>
-        """.format(filepath, open_in_github_svg, filepath.replace("py", "ipynb"), open_in_colab_svg, open_in_kaggle),
+        """.format(filepath, open_in_github1_svg, filepath.replace("py", "ipynb"), open_in_colab_svg, open_in_kaggle),
         unsafe_allow_html=True)
     st.download_button('Download', code_file, file_name=filename)
     st.code(f'{code_file}')
