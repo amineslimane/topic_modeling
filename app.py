@@ -33,6 +33,7 @@ st.set_page_config(
     page_title="Review Analyzer | Topic Modeling",
     page_icon="⚡️",
     layout="wide",
+    # initial_sidebar_state="expanded"
 )
 
 # Sidebar
@@ -160,3 +161,13 @@ if review != "":
                     "⚠️ Le nombre de topic que vous avez demandé est supérieur au nombre de topic "
                     "qui peuvent être en relation avec ce review (Probabilité de similarité égale à 0️%)"
                 )
+st.markdown("""
+    <footer class="css-qri22k">
+        Made by 
+        <a href="https://amineslimane.me" class="css-1vbd788 egzxvld1">
+            <img src="https://amineslimane.me/images/photo.png" style="width: 20px; margin: 0px 3px 4px 4px;">
+            Amine Slimane
+        </a>
+        
+    </footer>
+""", unsafe_allow_html=True)

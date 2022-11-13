@@ -3,10 +3,18 @@ div.css-18e3th9{
     padding-top: 3rem;
 }
 
-footer.css-qri22k {
+footer.egzxvld0 {
     display: none;
 }
-
+footer.css-qri22k {
+    padding: 150px 0 15px 0;
+    position: absolute;
+}
+.css-1vbd788:hover {
+    color: rgb(49, 51, 63);
+    font-weight: 600;
+    text-decoration: unset;
+}
 
 div.stAlert div {
     border-radius: 15px;
