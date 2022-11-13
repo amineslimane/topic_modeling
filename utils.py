@@ -60,8 +60,8 @@ open_in_github1_svg = open('static/images/open_in_github.svg', 'r', encoding="ut
 open_in_github2_svg = open('static/images/open_in_github2.svg', 'r', encoding="utf8").read()
 open_in_colab_svg = open('static/images/open_in_colab.svg', 'r', encoding="utf8").read()
 open_in_kaggle = open('static/images/open_in_kaggle.svg', 'r', encoding="utf8").read()
-def show_code(filename):
-    st.header("📃 " + filename)
+def show_code(filename, icon):
+    st.header(icon + filename)
     if filename in ["preprocessing.py", "build_model.py"]:
         filepath = "machine_learning/" + filename
     else:
@@ -80,5 +80,5 @@ def show_code(filename):
             </a>
         """.format(filepath, open_in_github1_svg, filepath.replace("py", "ipynb"), open_in_colab_svg, open_in_kaggle),
         unsafe_allow_html=True)
-    st.download_button('Download', code_file, file_name=filename)
+    st.download_button("Download code", code_file, file_name=filename)
     st.code(f'{code_file}')

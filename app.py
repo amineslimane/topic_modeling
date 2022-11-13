@@ -108,13 +108,13 @@ with st.expander("🧊 Données"):
         st.dataframe(df_negative, height=250, use_container_width=True)
 
 with st.expander("🚀 Code source"):
-    code_tab1, code_tab2, code_tab3 = st.tabs(["📃 app.py", "📃 preprocessing.py", "📃 build_model.py"])
+    code_tab1, code_tab2, code_tab3 = st.tabs(["📃 app.py", "✂ preprocessing.py", "🔥 build_model.py"])
     with code_tab1:
-        show_code("app.py")
+        show_code("app.py", "📃 ")
     with code_tab2:
-        show_code("preprocessing.py")
+        show_code("preprocessing.py", "✂ ")
     with code_tab3:
-        show_code("build_model.py")
+        show_code("build_model.py", "🔥 ")
 
 
 review = st.text_area("Entrez un texte", height=150, max_chars=5000, key='review')
