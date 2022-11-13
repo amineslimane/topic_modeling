@@ -31,7 +31,7 @@ def aleatoire_callback():
 # im = Image.open("favicon.ico")
 st.set_page_config(
     page_title="Review Analyzer | Topic Modeling",
-    page_icon="⚡️",
+    page_icon="💬️",
     layout="wide",
     # initial_sidebar_state="expanded"
 )
